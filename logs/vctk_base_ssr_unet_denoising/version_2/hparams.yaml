@@ -1,0 +1,177 @@
+channels: 1
+hp: !!python/object:tools.utils.HParams
+  augment: !!python/object:tools.utils.HParams
+    effects: []
+    params: !!python/object:tools.utils.HParams
+      bass: !!python/object:tools.utils.HParams
+        level:
+        - 3
+        - 35
+        prob:
+        - 0.15
+      clip: !!python/object:tools.utils.HParams
+        louder_time:
+        - 1.0
+        - 11.0
+        prob:
+        - 0.2
+      fade: !!python/object:tools.utils.HParams
+        fade_in_portion:
+        - 0.1
+        - 0.3
+        fade_out_portion:
+        - 0.1
+        - 0.3
+        prob:
+        - 0.1
+      high_pass: !!python/object:tools.utils.HParams
+        high_pass_range:
+        - 500
+        - 2000
+        prob:
+        - 0.25
+      low_pass_1: !!python/object:tools.utils.HParams
+        low_pass_range:
+        - 4000
+        - 22000
+        prob:
+        - 0.25
+      low_pass_2: !!python/object:tools.utils.HParams
+        filter_order_range:
+        - 2
+        - 10
+        filter_type:
+        - cheby1
+        - ellip
+        - bessel
+        - stft_hard
+        - stft
+        - butter
+        low_pass_range:
+        - 44100
+        - 44100
+        prob:
+        - 1.0
+      noise: !!python/object:tools.utils.HParams
+        prob:
+        - 1.0
+        snr_range:
+        - -5
+        - 40
+      pitch: !!python/object:tools.utils.HParams
+        pitch_down_range:
+        - -350
+        - -100
+        pitch_up_range:
+        - 100
+        - 350
+        prob:
+        - 0.0
+        - 0.0
+      reverb_freeverb: !!python/object:tools.utils.HParams
+        dumping_factor:
+        - 0
+        - 100
+        prob:
+        - 0.2
+        reverb_level:
+        - 0
+        - 50
+        room_size:
+        - 0
+        - 100
+      reverb_rir: !!python/object:tools.utils.HParams
+        prob:
+        - 0.3
+        rir_file_name: ''
+      rir_root: /home/yujin/voice_fixer_main/voicefixer_main/datasets/se/RIR_44k/train
+      scale: !!python/object:tools.utils.HParams
+        prob:
+        - 1
+        - 0
+        scale_range:
+        - 0.3
+        - 1.0
+      time_dropout: !!python/object:tools.utils.HParams
+        drop_range:
+        - 0.0
+        - 1.0
+        max_segment: 0.1
+        prob:
+        - 0.0
+      treble: !!python/object:tools.utils.HParams
+        level:
+        - 3
+        - 20
+        prob:
+        - 0.05
+    source: vocals
+  config_path: config/vctk_base_ssr_unet_denoising.json
+  data: !!python/object:tools.utils.HParams
+    max_wav_value: 1.0
+    sampling_rate: 44100
+    source_types:
+    - vocals
+    - noise
+    train_dataset: !!python/object:tools.utils.HParams
+      noise: !!python/object:tools.utils.HParams
+        vd_noise: dataIndex/vd_noise/vd_noise.lst
+      vocals: !!python/object:tools.utils.HParams
+        vctk: dataIndex/vctk/train/speech.lst
+    val_dataset: !!python/object:tools.utils.HParams
+      noisy: !!python/object:tools.utils.HParams
+        gsr: datasets/se/TestSets/ALL_GSR/simulated.lst
+      vocals: !!python/object:tools.utils.HParams
+        gsr: datasets/se/TestSets/ALL_GSR/target.lst
+  log: !!python/object:tools.utils.HParams
+    flush_logs_every_n_steps: 200
+    log_every_n_steps: 10
+    progress_bar_refresh_rate: 1
+  log_dir: ./logs/vctk_base_ssr_unet_denoising/version_2
+  model: !!python/object:tools.utils.HParams
+    channels_in: 1
+    hop_size: 441
+    mel_freq_bins: 128
+    n_mel: 128
+    pad_mode: reflect
+    window: hann
+    window_size: 2048
+  model_dir: ./logs/vctk_base_ssr_unet_denoising
+  root: /home/yujin/voice_fixer_main/voicefixer_main
+  task: !!python/object:tools.utils.HParams
+    gsr: !!python/object:tools.utils.HParams
+      gsr_model: !!python/object:tools.utils.HParams
+        unet: false
+        voicefixer: !!python/object:tools.utils.HParams
+          bi_gru: false
+          dnn: false
+          unet: false
+          unet_small: false
+    inspect_training_data: false
+    ssr: !!python/object:tools.utils.HParams
+      ssr_model: !!python/object:tools.utils.HParams
+        unet: true
+      ssr_task: !!python/object:tools.utils.HParams
+        declipping: false
+        denoising: true
+        dereverberation: false
+        super_resolution: false
+  train: !!python/object:tools.utils.HParams
+    batch_size: 2
+    betas:
+    - 0.5
+    - 0.999
+    check_val_every_n_epoch: 2
+    eps: 1.0e-09
+    hours_of_data_for_an_epoch: 300
+    input_segment_length: 3.0
+    learning_rate: 0.0005
+    lr_decay: 0.9
+    max_epoches: 5000
+    num_works: 2
+    reduce_lr_every_n_steps: 40000
+    resume_from_checkpoint: ''
+    save_top_k: -1
+    seed: 1234
+    warmup_steps: 100
+type_target: vocals
