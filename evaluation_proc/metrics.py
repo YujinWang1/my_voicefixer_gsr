@@ -94,17 +94,37 @@ class AudioMetrics():
         sp_loss = 10 * torch.log10((pow_p_norm(target) / (pow_p_norm(noise) + EPS) + EPS))
         return torch.sum(sp_loss) / sp_loss.size()[0]
 
-    def ssim(self,est, target):
+   # def ssim(self,est, target):
+     #   if("cuda" in str(target.device)):
+     #       target, output = target.detach().cpu().numpy(), est.detach().cpu().numpy()
+     #   else:
+      #      target, output = target.numpy(), est.numpy()
+      #  res = np.zeros([output.shape[0],output.shape[1]])
+      #  for bs in range(output.shape[0]):
+      #      for c in range(output.shape[1]):
+      #          res[bs,c] = ssim(output[bs,c,...],target[bs,c,...],win_size=7)
+       # return torch.tensor(res)[...,None,None]
+
+
+    def ssim(self, est, target):
         if("cuda" in str(target.device)):
             target, output = target.detach().cpu().numpy(), est.detach().cpu().numpy()
         else:
             target, output = target.numpy(), est.numpy()
-        res = np.zeros([output.shape[0],output.shape[1]])
+        res = np.zeros([output.shape[0], output.shape[1]])
         for bs in range(output.shape[0]):
             for c in range(output.shape[1]):
-                res[bs,c] = ssim(output[bs,c,...],target[bs,c,...],win_size=7)
-        return torch.tensor(res)[...,None,None]
-
+                # 计算当前批次和通道的动态范围（最大值 - 最小值）
+                data_range = target[bs, c, ...].max() - target[bs, c, ...].min()
+                # 添加 data_range 参数
+                res[bs, c] = ssim(
+                    output[bs, c, ...],
+                    target[bs, c, ...],
+                    win_size=7,
+                    data_range=data_range  # 关键：添加数据范围参数
+                )
+        return torch.tensor(res)[..., None, None]
+        
 if __name__ == '__main__':
     import numpy as np
     au = AudioMetrics(rate=44100)

@@ -3,6 +3,7 @@ Exp_Results
 ig_*
 __pycache__
 checkpoints
+datasets/se/
 .idea
 #modules
 *_log
@@ -36,3 +37,5 @@ WavAugment
 *.pyc
 *.txt
 
+exp_results/
+logs/

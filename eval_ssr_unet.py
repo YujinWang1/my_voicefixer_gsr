@@ -6,19 +6,19 @@ git_root = git.Repo("", search_parent_directories=True).git.rev_parse("--show-to
 sys.path.append(git_root)
 
 from tools.file.wav import *
-from single_task_speech_restoration.declip.unet.model import ResUNet as Model
+#from single_task_speech_restoration.declip.unet.model import ResUNet as Model
 
 from tools.pytorch.pytorch_util import *
-from tools.file.hdfs import *
+#from tools.file.hdfs import *
 import librosa
 import librosa.display
 import matplotlib.pyplot as plt
-from tools.file.hdfs import hdfs_get
+#from tools.file.hdfs import hdfs_get
 from tools.pytorch.pytorch_util import from_log, to_log
 from matplotlib import cm
-from evaluation_proc import Config
-from evaluation_proc import evaluation
-from evaluation_proc import AudioMetrics
+from evaluation_proc import config
+#from evaluation_proc import evaluation
+#from evaluation_proc import AudioMetrics
 
 EPS=1e-8
 
